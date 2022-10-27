@@ -1,10 +1,10 @@
 # persistent-storage-nodejs-minikube-service
 Persistent Storage with NodeJS. Minikube service.
 ## Propedeutic:
--   a git client
+-   a installed git client
 -   a locally running minikube
 -   a configured kubectl
--   Clone this repo:\
+-   then, clone this repo:\
 `git clone https://github.com/mvergaz/persistent-storage-nodejs-minikube-service`\
 `cd persistent-storage-nodejs-minikube-service`
 ## Repo contents:
@@ -29,15 +29,13 @@ root@minikube: `exit`
 ##  Steps:
 -   Install myservice PersistentVolume and Persistent Volume Claims:\
 `kubectl apply -f myservice-pv.yaml`\
-`kubectl get pv`\
-`kubectl get pvc`
+`kubectl get pv,pvc | grep myservice`\
 -   Install the image:\
 `minikube image build . -t local/myservice-image:node16`\
-`minikube image ls`
+`minikube image ls | grep myservice`
 -   Deploy and check the service:\
 `kubectl apply -f myservice-deployment.yaml`\
-`kubectl get deployments`\
-`kubectl get services`
+`kubectl get deployments,services | grep myservice`
 -   Expose the service out of the cluster\
 `minikube service myservice`
 ## Roll all back
@@ -45,6 +43,6 @@ root@minikube: `exit`
 `kubectl delete -n default service myservice`
 -   Delete deployment\
 `kubectl delete -n default deployment myservice-app`
--   Delete service storage and claims:\
+-   Delete service storage and claims (could take some seconds to be completed):\
 `kubectl delete pvc myservice-pv-volume-claim`\
 `kubectl delete pv myservice-pv-volume`
