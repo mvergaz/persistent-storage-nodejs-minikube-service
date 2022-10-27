@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: myservice
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8080
+  selector:
+    app: myservice-app  
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myservice-app
+  labels:
+    app: myservice-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myservice-app
+  template:
+    metadata:
+      labels:
+        app: myservice-app
+    spec:
+      containers:
+      - name: myservice
+        image: docker.io/local/myservice-image:node16
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+          name: myservice
+        volumeMounts:
+        - name: myservice-pv-volume
+          mountPath: /var/tmp/my-service
+      volumes:
+      - name: myservice-pv-volume
+        persistentVolumeClaim:
+          claimName: myservice-pv-volume-claim
